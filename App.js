@@ -26,7 +26,7 @@ import {
     TouchableOpacity,
     TouchableHighlight,
     TouchableWithoutFeedback,
-    FlatList, Image, Button, Dimensions
+    FlatList, Image, Button, Dimensions,
 } from 'react-native';
 
 import {
@@ -34,14 +34,14 @@ import {
     LearnMoreLinks,
     Colors,
     DebugInstructions,
-    ReloadInstructions
+    ReloadInstructions,
 
 } from 'react-native/Libraries/NewAppScreen';
 
 
 const initialState = {
     method: () => null,
-    counter: 0
+    counter: 0,
 };
 
 const reducer = (state = {}, action) => {
@@ -49,17 +49,17 @@ const reducer = (state = {}, action) => {
         case 'ADD_METHOD':
             return {
                 ...state,
-                method: action.data
+                method: action.data,
             };
         case 'INCREASE_COUNTER':
             return {
                 ...state,
-                counter: state.counter + 1
+                counter: state.counter + 1,
             };
         case 'DECREASE_COUNTER':
             return {
                 ...state,
-                counter: state.counter - 1
+                counter: state.counter - 1,
             };
         default:
             return state;
@@ -76,8 +76,8 @@ const Item = (props) => {
     return (
         <TouchableHighlight
             onPress={() => {
-                setContextItem(props)
-                navigation.navigate('Details')
+                setContextItem(props);
+                navigation.navigate('Details');
             }
             }
             underlayColor='#ddd'>
@@ -103,11 +103,11 @@ const MyHeader = () => {
         fetch('http://ui-base.herokuapp.com/api/items/get')
             .then((response) => response.json())
             .then(items => {
-                setItems(items)
+                setItems(items);
             })
             .catch((error) => {
                 console.log('error ', error);
-            })
+            });
     };
 
     return (
@@ -125,7 +125,7 @@ const MyHeader = () => {
                 keyExtractor={item => item.id}
             />
         </>
-    )
+    );
 };
 
 const Phones = ({navigation}) => {
@@ -141,11 +141,11 @@ const Phones = ({navigation}) => {
         fetch('http://ui-base.herokuapp.com/api/items/get')
             .then((response) => response.json())
             .then(items => {
-                setItems(items)
+                setItems(items);
             })
             .catch((error) => {
                 console.log('error ', error);
-            })
+            });
     };
 
     return (
@@ -198,17 +198,16 @@ const Phones = ({navigation}) => {
 
 
             <View>
-                <TouchableWithoutFeedback
-                >
+                <TouchableWithoutFeedback onPress={() => dispatch({ type: "INCREASE_COUNTER" })}>
                     <View>
                         <Text style={styles.countFooter}>
-                            Records: {0}
+                            Records: {counter}
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>
             </View>
         </View>
-    )
+    );
 };
 
 const HomeScreen = () => {
@@ -217,7 +216,7 @@ const HomeScreen = () => {
             <Text>Home Screen</Text>
         </View>
     );
-}
+};
 
 function DetailsScreen() {
     const {item} = useContext(AppContext);
@@ -237,9 +236,11 @@ function DetailsScreen() {
 }
 
 function SettingsScreen({navigation}) {
+    const {state, dispatch} = useContext(AppConfig);
+    const {counter} = state;
     return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text>Settings screen</Text>
+            <Text onPress={() => dispatch({ type: "DECREASE_COUNTER" })}>Settings screen - {counter}</Text>
             <Button
                 title="Go to Details"
                 onPress={() => navigation.navigate('Details')}
@@ -271,6 +272,7 @@ function PhonesStackScreen() {
 }
 
 const Tab = createBottomTabNavigator();
+
 //const Tab = createMaterialTopTabNavigator();
 
 function App() {
@@ -290,10 +292,10 @@ function App() {
         },
         labelStyle: {
             color: 'darkblue',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
         },
         upperCaseLabel: false,
-        indicatorStyle: {backgroundColor: 'darkblue'}
+        indicatorStyle: {backgroundColor: 'darkblue'},
     };
 
     const name = 'Phones';
@@ -327,9 +329,9 @@ function App() {
                                         style={{
                                             height: 15,
                                             width: 15,
-                                            margin: 0
+                                            margin: 0,
                                         }}
-                                    />
+                                    />;
                                 }
                                 if (route.name === 'Settings') {
                                     iconName = <Image
@@ -337,13 +339,13 @@ function App() {
                                         style={{
                                             height: 20,
                                             width: 20,
-                                            margin: 0
+                                            margin: 0,
                                         }}
-                                    />
+                                    />;
                                 }
 
                                 return iconName;
-                            }
+                            },
                         })}
                     >
                         <Tab.Screen name={name} component={PhonesStackScreen}/>
@@ -393,52 +395,52 @@ function App() {
 
 const styles = StyleSheet.create({
     body: {
-        backgroundColor: 'red'
+        backgroundColor: 'red',
     },
- /*   scrollView: {
-       backgroundColor: Colors.lighter
-    },
-    engine: {
-        position: 'absolute',
-        right: 0
-    },
-    body: {
-        backgroundColor: Colors.white
-    },
-    sectionContainer: {
-        marginTop: 32,
-        paddingHorizontal: 24
-    },
-    sectionTitle: {
-        fontSize: 24,
-        fontWeight: '600',
-        color: Colors.black
-    },
-    sectionDescription: {
-        marginTop: 8,
-        fontSize: 18,
-        fontWeight: '400',
-        color: Colors.dark
-    },
-    highlight: {
-        fontWeight: '700'
-    },
-    footer: {
-        color: Colors.dark,
-        fontSize: 12,
-        fontWeight: '600',
-        padding: 4,
-        paddingRight: 12,
-        textAlign: 'right'
-    },*/
+    /*   scrollView: {
+          backgroundColor: Colors.lighter
+       },
+       engine: {
+           position: 'absolute',
+           right: 0
+       },
+       body: {
+           backgroundColor: Colors.white
+       },
+       sectionContainer: {
+           marginTop: 32,
+           paddingHorizontal: 24
+       },
+       sectionTitle: {
+           fontSize: 24,
+           fontWeight: '600',
+           color: Colors.black
+       },
+       sectionDescription: {
+           marginTop: 8,
+           fontSize: 18,
+           fontWeight: '400',
+           color: Colors.dark
+       },
+       highlight: {
+           fontWeight: '700'
+       },
+       footer: {
+           color: Colors.dark,
+           fontSize: 12,
+           fontWeight: '600',
+           padding: 4,
+           paddingRight: 12,
+           textAlign: 'right'
+       },*/
     item: {
         backgroundColor: '#f9c2ff',
         padding: 20,
         marginVertical: 8,
-        marginHorizontal: 16
+        marginHorizontal: 16,
     },
     title: {
-        fontSize: 32
+        fontSize: 32,
     },
     row: {
         flex: 1,
@@ -447,12 +449,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#D7D7D7',
         borderBottomWidth: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
     },
     rowText: {
         backgroundColor: '#fff',
         color: 'black',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     container: {
         flex: 1,
@@ -463,7 +465,7 @@ const styles = StyleSheet.create({
     iconForm: {
         flexDirection: 'row',
         borderColor: 'darkblue',
-        borderWidth: 3
+        borderWidth: 3,
     },
     header: {
         flexDirection: 'row',
@@ -471,7 +473,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'darkblue',
         borderWidth: 0,
         borderColor: 'whitesmoke',
-        marginTop: 0
+        marginTop: 0,
     },
     searchLarge: {
         height: 45,
@@ -480,7 +482,7 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: 'white',
         borderRadius: 0,
-        width: Dimensions.get('window').width * .90
+        width: Dimensions.get('window').width * .90,
     },
     searchSmall: {
         height: 45,
@@ -489,14 +491,14 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         marginLeft: -5,
         paddingLeft: 5,
-        width: Dimensions.get('window').width * .10
+        width: Dimensions.get('window').width * .10,
     },
     textSmall: {
         fontSize: 16,
         textAlign: 'center',
         margin: 14,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
     },
     textLarge: {
         fontSize: 20,
@@ -505,7 +507,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         paddingLeft: 10,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
     },
     textInput: {
         height: 45,
@@ -514,7 +516,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderWidth: 3,
         borderColor: 'lightgray',
-        borderRadius: 0
+        borderRadius: 0,
     },
     row: {
         flex: 1,
@@ -523,12 +525,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#D7D7D7',
         borderBottomWidth: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
     },
     rowText: {
         backgroundColor: '#fff',
         color: 'black',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     countFooter: {
         fontSize: 16,
@@ -537,22 +539,22 @@ const styles = StyleSheet.create({
         borderColor: '#D7D7D7',
         backgroundColor: 'darkblue',
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     loader: {
         justifyContent: 'center',
-        height: 100
+        height: 100,
     },
     error: {
         color: 'red',
         paddingTop: 10,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     menu: {
         alignItems: 'center',
         margin: 14,
-        marginTop: 16
-    }
+        marginTop: 16,
+    },
 });
 
 export default App;
