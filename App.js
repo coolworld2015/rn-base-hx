@@ -132,6 +132,7 @@ const Phones = ({navigation}) => {
     const {state, dispatch} = useContext(AppConfig);
     const {counter} = state;
     const [items, setItems] = useState([]);
+    const [records, setRecords] = useState(0);
 
     useEffect(() => {
         getUsers();
@@ -142,6 +143,7 @@ const Phones = ({navigation}) => {
             .then((response) => response.json())
             .then(items => {
                 setItems(items);
+                setRecords(items.length);
             })
             .catch((error) => {
                 console.log('error ', error);
@@ -201,7 +203,7 @@ const Phones = ({navigation}) => {
                 <TouchableWithoutFeedback onPress={() => dispatch({ type: "INCREASE_COUNTER" })}>
                     <View>
                         <Text style={styles.countFooter}>
-                            Records: {counter}
+                            Records: {records}
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>
