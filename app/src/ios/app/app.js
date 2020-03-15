@@ -19,6 +19,8 @@ import {
     TouchableOpacity,
     TouchableHighlight,
     TouchableWithoutFeedback,
+    RefreshControl,
+    ActivityIndicator,
     FlatList, Image, Button, Dimensions,
 } from 'react-native';
 
@@ -90,38 +92,59 @@ const Phones = ({navigation}) => {
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
+    const [refreshing, setRefreshing] = useState(true);
+    const [showProgress, setShowProgress] = useState(true);
 
     useEffect(() => {
-        getUsers();
+        getItems();
     }, []);
 
-    const getUsers = () => {
+    const getItems = () => {
         fetch('http://ui-base.herokuapp.com/api/items/get')
             .then((response) => response.json())
             .then(items => {
                 setItems(items);
                 setFilteredItems(items);
                 setRecords(items.length);
+                setRefreshing(false);
+                setShowProgress(false);
             })
             .catch((error) => {
                 console.log('error ', error);
             });
     };
 
+    const refreshData = () => {
+        setShowProgress(true);
+        setItems([]);
+        setRecords(0);
+        getItems();
+    }
+
     const onChangeText = (text) => {
         let arr = [].concat(filteredItems);
 
         let filteredItems1 = arr.filter((el) => el.phone.toLowerCase().indexOf(text.toLowerCase()) !== -1);
-        setItems(filteredItems1)
+        setItems(filteredItems1);
         setRecords(filteredItems1.length);
-        setSearchQuery(text)
-        console.log(filteredItems)
-/*        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(items),
-            resultsCount: items.length,
-            filteredItems: items,
-            searchQuery: text
-        });*/
+        setSearchQuery(text);
+    };
+
+    const clearSearchQuery = () => {
+        setItems(filteredItems);
+        setRecords(filteredItems.length);
+        setSearchQuery('');
+    };
+
+    let loader;
+    if (showProgress) {
+        loader = <View style={styles.loader}>
+            <ActivityIndicator
+                size="large"
+                color="darkblue"
+                animating={true}
+            />
+        </View>
     }
 
     let image;
@@ -133,7 +156,7 @@ const Phones = ({navigation}) => {
                 width: 20,
                 marginTop: 10,
             }}
-        />
+        />;
     }
 
     return (
@@ -177,20 +200,22 @@ const Phones = ({navigation}) => {
                         underlineColorAndroid='rgba(0,0,0,0)'
                         onChangeText={onChangeText}
                         style={styles.searchLarge}
-                        value={this.searchQuery}
+                        value={searchQuery}
                         placeholderTextColor='gray'
                         placeholder='Search here'>
                     </TextInput>
                 </View>
                 <View style={styles.searchSmall}>
                     <TouchableWithoutFeedback
-                        /*onPress={() => this.clearSearchQuery()}*/>
+                        onPress={clearSearchQuery}>
                         <View>
                             {image}
                         </View>
                     </TouchableWithoutFeedback>
                 </View>
             </View>
+
+            {loader}
 
             <FlatList
                 data={items}
@@ -204,10 +229,18 @@ const Phones = ({navigation}) => {
                     />
                 )}
                 keyExtractor={item => item.id}
+                refreshControl={
+                    <RefreshControl
+                        tintColor='transparent'
+                        enabled={false}
+                        refreshing={false}
+                        onRefresh={refreshData}
+                    />
+                }
             />
 
             <View>
-                <TouchableWithoutFeedback onPress={() => dispatch({ type: "INCREASE_COUNTER" })}>
+                <TouchableWithoutFeedback onPress={() => dispatch({type: 'INCREASE_COUNTER'})}>
                     <View>
                         <Text style={styles.countFooter}>
                             Records: {records}
@@ -249,7 +282,7 @@ function SettingsScreen({navigation}) {
     const {counter} = state;
     return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text onPress={() => dispatch({ type: "DECREASE_COUNTER" })}>Settings screen - {counter}</Text>
+            <Text onPress={() => dispatch({type: 'DECREASE_COUNTER'})}>Settings screen - {counter}</Text>
             <Button
                 title="Go to Details"
                 onPress={() => navigation.navigate('Details')}
