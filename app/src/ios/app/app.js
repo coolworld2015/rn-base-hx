@@ -92,7 +92,7 @@ const Phones = ({navigation}) => {
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
-    const [refreshing, setRefreshing] = useState(true);
+    const [serverError, setServerError] = useState(false);
     const [showProgress, setShowProgress] = useState(true);
 
     useEffect(() => {
@@ -106,16 +106,18 @@ const Phones = ({navigation}) => {
                 setItems(items);
                 setFilteredItems(items);
                 setRecords(items.length);
-                setRefreshing(false);
                 setShowProgress(false);
             })
             .catch((error) => {
                 console.log('error ', error);
+                setShowProgress(false);
+                setServerError(true);
             });
     };
 
     const refreshData = () => {
         setShowProgress(true);
+        setServerError(false);
         setItems([]);
         setRecords(0);
         getItems();
@@ -136,7 +138,14 @@ const Phones = ({navigation}) => {
         setSearchQuery('');
     };
 
-    let loader;
+    let errorCtrl, loader, image;
+
+    if (serverError) {
+        errorCtrl = <Text style={styles.error}>
+            Something went wrong.
+        </Text>;
+    }
+
     if (showProgress) {
         loader = <View style={styles.loader}>
             <ActivityIndicator
@@ -147,7 +156,6 @@ const Phones = ({navigation}) => {
         </View>
     }
 
-    let image;
     if (searchQuery.length > 0) {
         image = <Image
             source={require('../../../img/cancel.png')}
@@ -217,6 +225,8 @@ const Phones = ({navigation}) => {
 
             {loader}
 
+            {errorCtrl}
+
             <FlatList
                 data={items}
                 renderItem={({item}) => (
@@ -231,9 +241,9 @@ const Phones = ({navigation}) => {
                 keyExtractor={item => item.id}
                 refreshControl={
                     <RefreshControl
-                        tintColor='transparent'
                         enabled={false}
                         refreshing={false}
+                        tintColor='transparent'
                         onRefresh={refreshData}
                     />
                 }
