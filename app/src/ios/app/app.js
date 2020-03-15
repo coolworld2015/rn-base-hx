@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {useContext, useReducer, useEffect, useState} from 'react';
 
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
@@ -21,6 +13,7 @@ import {
     ScrollView,
     View,
     Text,
+    TextInput,
     StatusBar,
     Alert,
     TouchableOpacity,
@@ -83,48 +76,10 @@ const Item = (props) => {
             underlayColor='#ddd'>
             <View style={styles.row}>
                 <Text style={styles.rowText}>
-                    {props.name}
+                    {props.name} - {props.phone}
                 </Text>
             </View>
         </TouchableHighlight>
-    );
-};
-
-const MyHeader = () => {
-    const {state, dispatch} = useContext(AppConfig);
-    const {counter} = state;
-    const [items, setItems] = useState([]);
-
-    useEffect(() => {
-        getUsers();
-    }, []);
-
-    const getUsers = () => {
-        fetch('http://ui-base.herokuapp.com/api/items/get')
-            .then((response) => response.json())
-            .then(items => {
-                setItems(items);
-            })
-            .catch((error) => {
-                console.log('error ', error);
-            });
-    };
-
-    return (
-        <>
-            <Text style={styles.sectionTitle}>MyHeader - {counter}</Text>
-            <FlatList
-                data={items}
-                /*ListFooterComponent={}*/
-                renderItem={({item}) => (
-                    <Item
-                        id={item.id}
-                        name={item.name}
-                    />
-                )}
-                keyExtractor={item => item.id}
-            />
-        </>
     );
 };
 
@@ -132,7 +87,9 @@ const Phones = ({navigation}) => {
     const {state, dispatch} = useContext(AppConfig);
     const {counter} = state;
     const [items, setItems] = useState([]);
+    const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         getUsers();
@@ -143,12 +100,41 @@ const Phones = ({navigation}) => {
             .then((response) => response.json())
             .then(items => {
                 setItems(items);
+                setFilteredItems(items);
                 setRecords(items.length);
             })
             .catch((error) => {
                 console.log('error ', error);
             });
     };
+
+    const onChangeText = (text) => {
+        let arr = [].concat(filteredItems);
+
+        let filteredItems1 = arr.filter((el) => el.phone.toLowerCase().indexOf(text.toLowerCase()) !== -1);
+        setItems(filteredItems1)
+        setRecords(filteredItems1.length);
+        setSearchQuery(text)
+        console.log(filteredItems)
+/*        this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(items),
+            resultsCount: items.length,
+            filteredItems: items,
+            searchQuery: text
+        });*/
+    }
+
+    let image;
+    if (searchQuery.length > 0) {
+        image = <Image
+            source={require('../../../img/cancel.png')}
+            style={{
+                height: 20,
+                width: 20,
+                marginTop: 10,
+            }}
+        />
+    }
 
     return (
         <View style={styles.container}>
@@ -185,19 +171,40 @@ const Phones = ({navigation}) => {
                 </View>
             </View>
 
+            <View style={styles.iconForm}>
+                <View>
+                    <TextInput
+                        underlineColorAndroid='rgba(0,0,0,0)'
+                        onChangeText={onChangeText}
+                        style={styles.searchLarge}
+                        value={this.searchQuery}
+                        placeholderTextColor='gray'
+                        placeholder='Search here'>
+                    </TextInput>
+                </View>
+                <View style={styles.searchSmall}>
+                    <TouchableWithoutFeedback
+                        /*onPress={() => this.clearSearchQuery()}*/>
+                        <View>
+                            {image}
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+            </View>
+
             <FlatList
                 data={items}
                 renderItem={({item}) => (
                     <Item
                         id={item.id}
                         name={item.name}
+                        phone={item.phone}
                         data={{item}}
                         navigation={navigation}
                     />
                 )}
                 keyExtractor={item => item.id}
             />
-
 
             <View>
                 <TouchableWithoutFeedback onPress={() => dispatch({ type: "INCREASE_COUNTER" })}>
@@ -304,7 +311,6 @@ function App() {
     const MyTheme = {
         dark: false,
         colors: {
-            primary: 'rgb(255, 45, 85)',
             background: 'white',
             card: 'rgb(255, 255, 255)',
             text: 'rgb(28, 28, 30)',
@@ -359,82 +365,10 @@ function App() {
     );
 }
 
-/*const Stack = createStackNavigator();
-
-function App() {
-    return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen name="Home" component={HomeScreen} />
-            </Stack.Navigator>
-        </NavigationContainer>
-    );
-}*/
-
-/*const App: () => React$Node = () => {
-    const [state, dispatch] = useReducer(reducer, initialState);
-
-    const handleClick = () => {
-        dispatch({type: 'INCREASE_COUNTER'});
-    };
-
-    return (
-        <AppConfig.Provider value={{state, dispatch}}>
-          <ScrollView>
-            <View style={styles.body}>
-                <View style={styles.sectionContainer}>
-                    <TouchableWithoutFeedback onPress={handleClick}>
-                        <View>
-                            <MyHeader/>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </View>
-            </View>
-          </ScrollView>
-        </AppConfig.Provider>
-    );
-};*/
-
 const styles = StyleSheet.create({
     body: {
         backgroundColor: 'red',
     },
-    /*   scrollView: {
-          backgroundColor: Colors.lighter
-       },
-       engine: {
-           position: 'absolute',
-           right: 0
-       },
-       body: {
-           backgroundColor: Colors.white
-       },
-       sectionContainer: {
-           marginTop: 32,
-           paddingHorizontal: 24
-       },
-       sectionTitle: {
-           fontSize: 24,
-           fontWeight: '600',
-           color: Colors.black
-       },
-       sectionDescription: {
-           marginTop: 8,
-           fontSize: 18,
-           fontWeight: '400',
-           color: Colors.dark
-       },
-       highlight: {
-           fontWeight: '700'
-       },
-       footer: {
-           color: Colors.dark,
-           fontSize: 12,
-           fontWeight: '600',
-           padding: 4,
-           paddingRight: 12,
-           textAlign: 'right'
-       },*/
     item: {
         backgroundColor: '#f9c2ff',
         padding: 20,
