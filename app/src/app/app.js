@@ -323,7 +323,12 @@ function PhonesStackScreen() {
     );
 }
 
-const Tab = createBottomTabNavigator();
+const Tab = Platform.select({
+    ios: () => createBottomTabNavigator(),
+    android: () => createMaterialTopTabNavigator(),
+})();
+
+//const Tab = createBottomTabNavigator();
 
 //const Tab = createMaterialTopTabNavigator();
 
@@ -500,7 +505,7 @@ const styles = StyleSheet.create({
     countFooter: {
         fontSize: 16,
         textAlign: 'center',
-        padding: 10,
+        padding: 12,
         borderColor: '#D7D7D7',
         backgroundColor: 'darkblue',
         color: 'white',
