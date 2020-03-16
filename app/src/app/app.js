@@ -12,6 +12,7 @@ import {Image, Platform} from 'react-native';
 
 import {SettingsScreen, DetailsScreen} from './other';
 import Phones from '../phones/phones';
+import PhonesDetails from '../phones/phoneDetails';
 
 console.disableYellowBox = true;
 
@@ -61,8 +62,8 @@ const PhonesStack = createStackNavigator();
 const PhonesStackScreen = () => {
     return (
         <PhonesStack.Navigator headerMode={'none'}>
-            <PhonesStack.Screen name="Phones" component={Phones} options={{title: ''}}/>
-            <PhonesStack.Screen name="Details" component={DetailsScreen} options={{title: '', headerLeft: null}}/>
+            <PhonesStack.Screen name="Phones1" component={Phones} options={{title: ''}}/>
+            <PhonesStack.Screen name="Details" component={PhonesDetails} options={{title: '', headerLeft: null}}/>
         </PhonesStack.Navigator>
     );
 };
