@@ -1,13 +1,12 @@
 'use strict';
 
-import React, {useContext, useReducer, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     StyleSheet,
     Text,
     View,
     TouchableHighlight,
     TouchableWithoutFeedback,
-    ScrollView,
     ActivityIndicator,
     TextInput,
     Image,
@@ -21,7 +20,6 @@ console.disableYellowBox = true;
 
 const Phones = ({navigation}) => {
     const {state, dispatch} = useContext(AppConfig);
-    const {counter} = state;
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -55,7 +53,7 @@ const Phones = ({navigation}) => {
         setItems([]);
         setRecords(0);
         getItems();
-    }
+    };
 
     const onChangeText = (text) => {
         let arr = [].concat(filteredItems);
@@ -87,7 +85,7 @@ const Phones = ({navigation}) => {
                 color="darkblue"
                 animating={true}
             />
-        </View>
+        </View>;
     }
 
     if (searchQuery.length > 0) {
@@ -226,7 +224,7 @@ const styles = StyleSheet.create({
     iconForm: {
         flexDirection: 'row',
         borderColor: 'darkblue',
-        borderWidth: 3
+        borderWidth: 3,
     },
     header: {
         flexDirection: 'row',
@@ -234,7 +232,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'darkblue',
         borderWidth: 0,
         borderColor: 'whitesmoke',
-        marginTop: 50
+        marginTop: 50,
     },
     searchLarge: {
         height: 45,
@@ -243,7 +241,7 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: 'white',
         borderRadius: 0,
-        width: Dimensions.get('window').width * .90
+        width: Dimensions.get('window').width * .90,
     },
     searchSmall: {
         height: 45,
@@ -252,14 +250,14 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         marginLeft: -5,
         paddingLeft: 5,
-        width: Dimensions.get('window').width * .10
+        width: Dimensions.get('window').width * .10,
     },
     textSmall: {
         fontSize: 16,
         textAlign: 'center',
         margin: 14,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
     },
     textLarge: {
         fontSize: 20,
@@ -268,7 +266,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         paddingLeft: 20,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
     },
     textInput: {
         height: 45,
@@ -277,7 +275,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderWidth: 3,
         borderColor: 'lightgray',
-        borderRadius: 0
+        borderRadius: 0,
     },
     row: {
         flex: 1,
@@ -286,12 +284,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: '#D7D7D7',
         borderBottomWidth: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
     },
     rowText: {
         backgroundColor: '#fff',
         color: 'black',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     countFooter: {
         fontSize: 16,
@@ -300,22 +298,22 @@ const styles = StyleSheet.create({
         borderColor: '#D7D7D7',
         backgroundColor: 'darkblue',
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     loader: {
         justifyContent: 'center',
-        height: 100
+        height: 100,
     },
     error: {
         color: 'red',
         paddingTop: 10,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     menu: {
         alignItems: 'center',
         margin: 14,
-        marginTop: 16
-    }
+        marginTop: 16,
+    },
 });
 
 export default Phones;
