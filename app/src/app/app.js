@@ -1,3 +1,5 @@
+'use strict';
+
 import React, {useContext, useReducer, useEffect, useState} from 'react';
 
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
@@ -33,6 +35,9 @@ import {
 
 } from 'react-native/Libraries/NewAppScreen';
 
+import Phones from '../phones/phones';
+
+console.disableYellowBox = true;
 
 const initialState = {
     method: () => null,
@@ -85,7 +90,7 @@ const Item = (props) => {
     );
 };
 
-const Phones = ({navigation}) => {
+const Phones1 = ({navigation}) => {
     const {state, dispatch} = useContext(AppConfig);
     const {counter} = state;
     const [items, setItems] = useState([]);
